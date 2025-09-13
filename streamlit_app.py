@@ -333,7 +333,7 @@ def main():
                         st.markdown("### Generated Output Files")
                         
                         # File download section
-                        col1, col2 = st.columns(2)
+                        col1, col2, col3 = st.columns(3)
                         
                         with col1:
                             st.markdown("#### 📋 Consolidated Report")
@@ -354,6 +354,24 @@ def main():
                                 st.info(f"📄 File size: {file_size:,} bytes | Contains: Methodology, Results, Conclusions")
                         
                         with col2:
+                            st.markdown("#### 📊 Excel Report (Company Format)")
+                            if "excel_file" in result and os.path.exists(result["excel_file"]):
+                                with open(result["excel_file"], 'rb') as f:
+                                    excel_content = f.read()
+                                
+                                st.download_button(
+                                    label="📥 Download Excel Report",
+                                    data=excel_content,
+                                    file_name=f"{company}_{industry}_AI_Proposal.xlsx",
+                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                    help="Excel format matching company sample requirements"
+                                )
+                                
+                                # Display Excel info
+                                excel_size = len(excel_content)
+                                st.info(f"📊 File size: {excel_size:,} bytes | Contains: Use cases, objectives, benefits")
+                        
+                        with col3:
                             st.markdown("#### 📊 Detailed Data")
                             if "json_file" in result and os.path.exists(result["json_file"]):
                                 with open(result["json_file"], 'r', encoding='utf-8') as f:
@@ -375,6 +393,8 @@ def main():
                         st.markdown("#### 📁 File Locations")
                         if "consolidated_file" in result:
                             st.code(f"Consolidated Report: {result['consolidated_file']}")
+                        if "excel_file" in result:
+                            st.code(f"Excel Report: {result['excel_file']}")
                         if "json_file" in result:
                             st.code(f"Detailed Data: {result['json_file']}")
                     
@@ -392,7 +412,8 @@ def main():
                     with metrics_cols[3]:
                         st.metric("✅ Status", "Success")
                     with metrics_cols[4]:
-                        st.metric("📁 Files", "2" if "consolidated_file" in result else "1")
+                        file_count = sum(1 for key in ["consolidated_file", "excel_file", "json_file"] if key in result)
+                        st.metric("📁 Files", file_count)
                 
                 else:
                     st.error(f"❌ Enhanced generation failed: {result.get('message', 'Unknown error')}")
@@ -424,7 +445,7 @@ def main():
     st.markdown("""
     <div style="text-align: center; color: #666; font-size: 0.9rem; padding: 2rem 0;">
         <p>🤖 Enhanced AI Use Case Generator | Powered by LangChain Multi-Agent System</p>
-        <p>✅ Strict Validation | 📊 Consolidated Output | 🔗 Resource Curation</p>
+        <p>✅ Strict Validation | 📊 Excel Output | 📋 Consolidated Reports | 🔗 Resource Curation</p>
         <p>🔧 Uses: OpenRouter API, Serper API, Kaggle API, GitHub API</p>
     </div>
     """, unsafe_allow_html=True)
