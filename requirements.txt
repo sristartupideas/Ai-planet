@@ -1,0 +1,38 @@
+# Multi-Agent AI Use Case Generation System - Streamlit Cloud Ready
+# Core Agent Framework - LangChain
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-openai>=0.1.0
+
+# LLM Service - OpenRouter Integration
+openai>=1.0.0
+
+# Web Search and APIs
+google-search-results>=2.4.2
+requests>=2.31.0
+kaggle>=1.6.17
+PyGithub>=1.59.1
+
+# UI Framework
+streamlit>=1.28.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+python-dotenv>=1.0.0
+
+# Utilities
+pydantic>=2.5.0
+typing-extensions>=4.8.0
+python-dateutil>=2.8.2
+beautifulsoup4>=4.12.0
+lxml>=4.9.3
+urllib3>=2.0.0
+
+# Output Generation
+markdown>=3.5.1
+jinja2>=3.1.2
+
+# Logging and Monitoring
+loguru>=0.7.2
