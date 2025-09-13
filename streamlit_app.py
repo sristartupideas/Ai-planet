@@ -337,9 +337,8 @@ def main():
                         
                         with col1:
                             st.markdown("#### 📋 Consolidated Report")
-                            if "consolidated_file" in result and os.path.exists(result["consolidated_file"]):
-                                with open(result["consolidated_file"], 'r', encoding='utf-8') as f:
-                                    consolidated_content = f.read()
+                            if "consolidated_report" in result:
+                                consolidated_content = result["consolidated_report"]
                                 
                                 st.download_button(
                                     label="📥 Download Consolidated Report (Markdown)",
@@ -355,9 +354,8 @@ def main():
                         
                         with col2:
                             st.markdown("#### 📊 Excel Report (Company Format)")
-                            if "excel_file" in result and os.path.exists(result["excel_file"]):
-                                with open(result["excel_file"], 'rb') as f:
-                                    excel_content = f.read()
+                            if "excel_content" in result:
+                                excel_content = result["excel_content"]
                                 
                                 st.download_button(
                                     label="📥 Download Excel Report",
@@ -373,9 +371,8 @@ def main():
                         
                         with col3:
                             st.markdown("#### 📊 Detailed Data")
-                            if "json_file" in result and os.path.exists(result["json_file"]):
-                                with open(result["json_file"], 'r', encoding='utf-8') as f:
-                                    json_content = f.read()
+                            if "json_content" in result:
+                                json_content = result["json_content"]
                                 
                                 st.download_button(
                                     label="📥 Download Detailed Data (JSON)",
@@ -389,14 +386,20 @@ def main():
                                 json_size = len(json_content.encode('utf-8'))
                                 st.info(f"📊 File size: {json_size:,} bytes | Contains: Raw data, metadata, timestamps")
                         
-                        # File paths display
-                        st.markdown("#### 📁 File Locations")
-                        if "consolidated_file" in result:
-                            st.code(f"Consolidated Report: {result['consolidated_file']}")
-                        if "excel_file" in result:
-                            st.code(f"Excel Report: {result['excel_file']}")
-                        if "json_file" in result:
-                            st.code(f"Detailed Data: {result['json_file']}")
+                        # File info display
+                        st.markdown("#### 📁 Generated Files")
+                        st.info("All files are generated in memory and available for download. No local files are saved.")
+                        
+                        file_list = []
+                        if "consolidated_report" in result:
+                            file_list.append("📋 Consolidated Report (Markdown)")
+                        if "excel_content" in result:
+                            file_list.append("📊 Excel Report (XLSX)")
+                        if "json_content" in result:
+                            file_list.append("📊 Detailed Data (JSON)")
+                        
+                        for file_info in file_list:
+                            st.code(file_info)
                     
                     # Enhanced summary metrics
                     st.markdown("---")
@@ -412,7 +415,7 @@ def main():
                     with metrics_cols[3]:
                         st.metric("✅ Status", "Success")
                     with metrics_cols[4]:
-                        file_count = sum(1 for key in ["consolidated_file", "excel_file", "json_file"] if key in result)
+                        file_count = sum(1 for key in ["consolidated_report", "excel_content", "json_content"] if key in result)
                         st.metric("📁 Files", file_count)
                 
                 else:
