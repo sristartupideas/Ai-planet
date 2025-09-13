@@ -96,7 +96,7 @@ class SimpleLangChainSystem:
             max_tokens=settings.LLM_MAX_TOKENS,
             api_key=settings.OPENROUTER_API_KEY,
             base_url="https://openrouter.ai/api/v1",
-            extra_headers={
+            default_headers={
                 "HTTP-Referer": "https://ai-planet.streamlit.app",
                 "X-Title": "AI Use Case Generator"
             }
@@ -116,7 +116,11 @@ class SimpleLangChainSystem:
             test_llm = ChatOpenAI(
                 model=settings.LLM_MODEL,
                 api_key=settings.OPENROUTER_API_KEY,
-                base_url="https://openrouter.ai/api/v1"
+                base_url="https://openrouter.ai/api/v1",
+                default_headers={
+                    "HTTP-Referer": "https://ai-planet.streamlit.app",
+                    "X-Title": "AI Use Case Generator"
+                }
             )
             test_response = test_llm.invoke("Test connectivity")
             logger.info("✅ OpenRouter API connectivity verified")
