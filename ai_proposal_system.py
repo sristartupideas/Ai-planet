@@ -375,14 +375,9 @@ class SimpleLangChainSystem:
             # Save outputs
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             
-            # Save consolidated report
-            consolidated_file = os.path.join(settings.REPORTS_DIR, f"{company}_{industry}_{timestamp}_CONSOLIDATED.md")
-            with open(consolidated_file, 'w', encoding='utf-8') as f:
-                f.write(consolidated_report)
-            
-            # Generate Excel report (company format)
+            # Generate Excel report (company format) - in memory for download
             excel_generator = ExcelReportGenerator()
-            excel_file = excel_generator.generate_excel_report({
+            excel_content = excel_generator.generate_excel_content({
                 "company": company,
                 "industry": industry,
                 "timestamp": timestamp,
@@ -391,7 +386,7 @@ class SimpleLangChainSystem:
                 "resources": resources
             })
             
-            # Save detailed JSON
+            # Prepare JSON data for download
             output_data = {
                 "company": company,
                 "industry": industry,
@@ -403,9 +398,7 @@ class SimpleLangChainSystem:
                 "status": "success"
             }
             
-            json_file = os.path.join(settings.REPORTS_DIR, f"{company}_{industry}_{timestamp}.json")
-            with open(json_file, 'w', encoding='utf-8') as f:
-                json.dump(output_data, f, indent=2, ensure_ascii=False)
+            json_content = json.dumps(output_data, indent=2, ensure_ascii=False)
             
             log_system_event("proposal_generation_completed", f"Proposal generated successfully for {company}")
             logger.info(f"Proposal generated successfully for {company}")
@@ -419,9 +412,8 @@ class SimpleLangChainSystem:
                 "research_findings": research_findings,
                 "use_cases": use_cases,
                 "resources": resources,
-                "consolidated_file": consolidated_file,
-                "excel_file": excel_file,
-                "json_file": json_file,
+                "excel_content": excel_content,
+                "json_content": json_content,
                 "timestamp": timestamp
             }
             
