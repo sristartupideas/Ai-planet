@@ -23,6 +23,7 @@ from utils.error_handling import (
     log_system_event, create_error_report, retry_on_failure,
     check_system_health, create_fallback_response
 )
+from utils.excel_generator import ExcelReportGenerator
 
 # Configure logging
 logging.basicConfig(level=getattr(logging, settings.LOG_LEVEL))
@@ -379,6 +380,17 @@ class SimpleLangChainSystem:
             with open(consolidated_file, 'w', encoding='utf-8') as f:
                 f.write(consolidated_report)
             
+            # Generate Excel report (company format)
+            excel_generator = ExcelReportGenerator()
+            excel_file = excel_generator.generate_excel_report({
+                "company": company,
+                "industry": industry,
+                "timestamp": timestamp,
+                "use_cases": use_cases,
+                "research_findings": research_findings,
+                "resources": resources
+            })
+            
             # Save detailed JSON
             output_data = {
                 "company": company,
@@ -408,6 +420,7 @@ class SimpleLangChainSystem:
                 "use_cases": use_cases,
                 "resources": resources,
                 "consolidated_file": consolidated_file,
+                "excel_file": excel_file,
                 "json_file": json_file,
                 "timestamp": timestamp
             }
@@ -673,6 +686,7 @@ High success probability projected based on industry benchmarks and resource ava
             "enhancements": [
                 "Enhanced Use Case Generation",
                 "Consolidated Report Generator",
+                "Excel Output Generator (Company Format)",
                 "Strict Validation Framework"
             ],
             "api_keys_configured": api_key_status["valid"],
