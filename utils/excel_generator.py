@@ -2,6 +2,7 @@
 Excel Output Generator for AI Use Case Proposals
 Generates Excel files matching the company's expected format
 """
+import os
 import pandas as pd
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -10,6 +11,7 @@ from typing import Dict, Any, List
 import logging
 from datetime import datetime
 import re
+from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -20,15 +22,15 @@ class ExcelReportGenerator:
         self.workbook = None
         self.worksheet = None
     
-    def generate_excel_report(self, data: Dict[str, Any]) -> str:
+    def generate_excel_content(self, data: Dict[str, Any]) -> bytes:
         """
-        Generate Excel report matching company sample format
+        Generate Excel report content in memory for Streamlit download
         
         Args:
             data: Dictionary containing proposal data
             
         Returns:
-            Path to generated Excel file
+            Excel file content as bytes
         """
         try:
             # Create workbook
@@ -50,15 +52,15 @@ class ExcelReportGenerator:
             # Apply formatting
             self._apply_formatting()
             
-            # Save file
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{data['company']}_{data['industry']}_AI_Proposal_{timestamp}.xlsx"
-            filepath = f"outputs/reports/{filename}"
+            # Save to BytesIO for in-memory download
+            from io import BytesIO
+            excel_buffer = BytesIO()
+            self.workbook.save(excel_buffer)
+            excel_buffer.seek(0)
             
-            self.workbook.save(filepath)
-            logger.info(f"Excel report generated: {filepath}")
+            logger.info("Excel report generated in memory for download")
             
-            return filepath
+            return excel_buffer.getvalue()
             
         except Exception as e:
             logger.error(f"Excel generation failed: {str(e)}")
