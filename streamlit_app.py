@@ -20,8 +20,8 @@ st.set_page_config(
     }
 )
 
-# Use st.cache_data for better performance (replaces deprecated @st.cache)
-@st.cache_data(ttl=3600, show_spinner=False)
+# Use st.cache_resource for caching system objects (can't be pickled)
+@st.cache_resource(ttl=3600, show_spinner=False)
 def initialize_system():
     """Initialize the system with caching for better performance"""
     try:
