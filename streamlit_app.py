@@ -6,7 +6,7 @@ import streamlit as st
 import json
 import os
 from datetime import datetime
-from ai_proposal_system import EnhancedLangChainSystem
+from ai_proposal_system import SimpleLangChainSystem
 from config.settings import settings
 
 # Configure Streamlit page
@@ -25,7 +25,7 @@ st.set_page_config(
 def initialize_system():
     """Initialize the enhanced system with caching"""
     try:
-        system = EnhancedLangChainSystem()
+        system = SimpleLangChainSystem()
         return system, system.get_system_status()
     except Exception as e:
         return None, {"status": "error", "error": str(e)}
